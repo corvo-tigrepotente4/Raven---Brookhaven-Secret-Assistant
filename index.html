@@ -47,6 +47,7 @@ button{
 
 <button onclick="ask()">Send</button>
 
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 
 let history = [];
@@ -96,7 +97,7 @@ async function ask(){
 
         document.getElementById("loading").remove();
 
-        chat.innerHTML += `<p><b>Raven:</b> ${data.answer}</p>`;
+        chat.innerHTML += `<p><b>Raven:</b><br>${marked.parse(data.answer)}</p>`;
 
         // Save Raven's reply
         history.push({
