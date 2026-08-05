@@ -80,7 +80,6 @@ def search_casebook(question):
 results = search_casebook(question)
 
 if not results:
-
     context = """
 No strong search results were found.
 
@@ -88,20 +87,15 @@ The user may be referring to the same concept using different wording.
 
 Think carefully.
 
-If you can infer the answer from related CaseBook information, explain it.
-
-If the CaseBook truly contains no information about the topic,
+If the CaseBook truly contains no information,
 say that the information does not appear to be documented.
 
 Never invent facts.
 """
-
 else:
-
     context = ""
 
     for title, url, content in results:
-
         context += f"""
 TITLE:
 {title}
@@ -115,26 +109,14 @@ CONTENT:
 -------------------------
 """
 
-    prompt = f"""
+prompt = f"""
 You are Raven, an AI assistant for Roblox Brookhaven mysteries.
 
 The information below comes from the Brookhaven Mystery CaseBook.
-It is your ONLY factual source. If you say quests, you should give a clear guide for the user to complete the quests and not simply write complete the quest.
+It is your ONLY factual source.
 
-Your job is to THINK about the information before answering.
+Never invent information.
 
-Rules:
-
-- Think carefully before answering.
-- Read every CaseBook result before writing anything.
-- Combine information from multiple CaseBook pages when useful.
-- Never stop after reading only one result.
-- Use your own words.
-- Never copy large sections.
-- Never invent information.
-- If the evidence is incomplete, explain what is known and what is still unknown.
-- If the CaseBook mentions something but does not explain it, explicitly say that.
-- Only conclude that something is not documented after considering all retrieved information.
 CASEBOOK RESULTS:
 
 {context}
@@ -144,29 +126,23 @@ USER QUESTION:
 {question}
 """
 
-    response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are Raven, a Roblox Brookhaven Mystery assistant. "
-                    "Only use the provided CaseBook information. "
-                    "Think carefully before answering. "
-                    "Do not copy large passages. "
-                    "Summarize naturally and never invent facts."
-                )
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        temperature=0.1,
-        max_tokens=500
-    )
+response = client.chat.completions.create(
+    model="llama-3.1-8b-instant",
+    messages=[
+        {
+            "role": "system",
+            "content": "You are Raven, a Roblox Brookhaven Mystery assistant. Only use the provided CaseBook information."
+        },
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ],
+    temperature=0.1,
+    max_tokens=500
+)
 
-   return response.choices[0].message.content.strip()
+return response.choices[0].message.content.strip()
 
 
 # ==========================
