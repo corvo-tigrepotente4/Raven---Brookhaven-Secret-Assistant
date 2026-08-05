@@ -7,7 +7,7 @@ from groq import Groq
 # ==========================
 
 client = Groq(
-    api_key="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"
+    api_key="API_KEY_HERE"
 )
 
 # ==========================
@@ -77,13 +77,9 @@ def search_casebook(question):
 # GENERATE AI ANSWER
 # ==========================
 
-def ask_raven(question, history=None):
+results = search_casebook(question)
 
-    if history is None:
-        history = []
-    results = search_casebook(question)
-
-   if not results:
+if not results:
 
     context = """
 No strong search results were found.
@@ -106,22 +102,6 @@ else:
 
     for title, url, content in results:
 
-        context += f"""
-TITLE:
-{title}
-
-URL:
-{url}
-
-CONTENT:
-{content[:1500]}
-
--------------------------
-"""
-
-    context = ""
-
-    for title, url, content in results:
         context += f"""
 TITLE:
 {title}
