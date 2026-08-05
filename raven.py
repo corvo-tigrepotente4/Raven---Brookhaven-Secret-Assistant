@@ -51,7 +51,7 @@ def search_casebook(question):
         FROM secrets_fts
         WHERE secrets_fts MATCH ?
         ORDER BY bm25(secrets_fts)
-        LIMIT 5
+        LIMIT 10
     """, (search_query,))
 
     results = cursor.fetchall()
@@ -81,8 +81,41 @@ def ask_raven(question):
 
     results = search_casebook(question)
 
-    if not results:
-        return "I couldn't find that information in the current CaseBook database."
+   if not results:
+
+    context = """
+No strong search results were found.
+
+The user may be referring to the same concept using different wording.
+
+Think carefully.
+
+If you can infer the answer from related CaseBook information, explain it.
+
+If the CaseBook truly contains no information about the topic,
+say that the information does not appear to be documented.
+
+Never invent facts.
+"""
+
+else:
+
+    context = ""
+
+    for title, url, content in results:
+
+        context += f"""
+TITLE:
+{title}
+
+URL:
+{url}
+
+CONTENT:
+{content[:1500]}
+
+-------------------------
+"""
 
     context = ""
 
@@ -110,15 +143,16 @@ Your job is to THINK about the information before answering.
 
 Rules:
 
-- Read all search results first.
-- Combine information from multiple results if needed.
-- Answer naturally in your own words.
-- Do NOT copy large chunks of text.
-- Do NOT invent information.
-- Ignore search results that don't actually answer the user's question.
-- If the answer cannot be determined from the CaseBook information below, reply exactly:
-"I couldn't find that information in the current CaseBook database."
-
+- Think carefully before answering.
+- Read every CaseBook result before writing anything.
+- Combine information from multiple CaseBook pages when useful.
+- Never stop after reading only one result.
+- Use your own words.
+- Never copy large sections.
+- Never invent information.
+- If the evidence is incomplete, explain what is known and what is still unknown.
+- If the CaseBook mentions something but does not explain it, explicitly say that.
+- Only conclude that something is not documented after considering all retrieved information.
 CASEBOOK RESULTS:
 
 {context}
