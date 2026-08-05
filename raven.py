@@ -133,6 +133,7 @@ def ask_raven(question, history=None):
                 "role": "system",
                 "content": "You are Raven, a Roblox Brookhaven Mystery assistant. Only use the provided CaseBook information."
             },
+            *(history or []),
             {
                 "role": "user",
                 "content": prompt
