@@ -131,6 +131,7 @@ When explaining mysteries:
 - Summarize the important evidence.
 - Explain connections between clues.
 - Mention what is known and what remains unknown.
+-Do NOT ever mention CaseBook. It confuses the user.
 
 For locations, secrets, and quests:
 - Give clear step-by-step guidance when possible.
