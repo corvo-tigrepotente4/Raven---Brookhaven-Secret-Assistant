@@ -1,13 +1,14 @@
 import sqlite3
 import re
 from groq import Groq
+import os
 
 # ==========================
 # GROQ SETUP
 # ==========================
 
 client = Groq(
-    api_key="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"
+    api_key=os.environ.get("GROQ_API_KEY")
 )
 
 # ==========================
