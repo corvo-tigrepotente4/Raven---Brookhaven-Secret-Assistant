@@ -13,22 +13,18 @@ app.add_middleware(
 
 class Question(BaseModel):
     question: str
+    history: list = []
 
 
 @app.post("/chat")
 def chat(data: Question):
 
-    answer = ask_raven(data.question)
-
-    return {
-        "answer": answer
-    }
-
-@app.post("/chat")
-def chat(data: Question):
     print("Received:", data.question)
 
-    answer = ask_raven(data.question)
+    answer = ask_raven(
+        data.question,
+        data.history
+    )
 
     print("Answer:", answer)
 
