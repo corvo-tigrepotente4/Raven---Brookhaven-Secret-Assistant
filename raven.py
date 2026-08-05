@@ -76,7 +76,7 @@ def search_casebook(question):
 # ==========================
 # GENERATE AI ANSWER
 # ==========================
-def ask_raven(question):
+def ask_raven(question, history=None):
     results = search_casebook(question)
     
     if not results:
