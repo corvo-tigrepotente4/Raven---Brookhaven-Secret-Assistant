@@ -76,71 +76,71 @@ def search_casebook(question):
 # ==========================
 # GENERATE AI ANSWER
 # ==========================
-
-results = search_casebook(question)
-
-if not results:
-    context = """
-No strong search results were found.
-
-The user may be referring to the same concept using different wording.
-
-Think carefully.
-
-If the CaseBook truly contains no information,
-say that the information does not appear to be documented.
-
-Never invent facts.
-"""
-else:
-    context = ""
-
-    for title, url, content in results:
-        context += f"""
-TITLE:
-{title}
-
-URL:
-{url}
-
-CONTENT:
-{content[:1500]}
-
--------------------------
-"""
-
-prompt = f"""
-You are Raven, an AI assistant for Roblox Brookhaven mysteries.
-
-The information below comes from the Brookhaven Mystery CaseBook.
-It is your ONLY factual source.
-
-Never invent information.
-
-CASEBOOK RESULTS:
-
-{context}
-
-USER QUESTION:
-
-{question}
-"""
-
-response = client.chat.completions.create(
-    model="llama-3.1-8b-instant",
-    messages=[
-        {
-            "role": "system",
-            "content": "You are Raven, a Roblox Brookhaven Mystery assistant. Only use the provided CaseBook information."
-        },
-        {
-            "role": "user",
-            "content": prompt
-        }
-    ],
-    temperature=0.1,
-    max_tokens=500
-)
+def ask_raven(question):
+    results = search_casebook(question)
+    
+    if not results:
+        context = """
+    No strong search results were found.
+    
+    The user may be referring to the same concept using different wording.
+    
+    Think carefully.
+    
+    If the CaseBook truly contains no information,
+    say that the information does not appear to be documented.
+    
+    Never invent facts.
+    """
+    else:
+        context = ""
+    
+        for title, url, content in results:
+            context += f"""
+    TITLE:
+    {title}
+    
+    URL:
+    {url}
+    
+    CONTENT:
+    {content[:1500]}
+    
+    -------------------------
+    """
+    
+    prompt = f"""
+    You are Raven, an AI assistant for Roblox Brookhaven mysteries.
+    
+    The information below comes from the Brookhaven Mystery CaseBook.
+    It is your ONLY factual source.
+    
+    Never invent information.
+    
+    CASEBOOK RESULTS:
+    
+    {context}
+    
+    USER QUESTION:
+    
+    {question}
+    """
+    
+    response = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are Raven, a Roblox Brookhaven Mystery assistant. Only use the provided CaseBook information."
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.1,
+        max_tokens=500
+    )
 
 return response.choices[0].message.content.strip()
 
